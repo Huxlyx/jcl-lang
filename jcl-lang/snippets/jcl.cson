@@ -1,0 +1,15 @@
+# If you want some example snippets, check out:
+# https://github.com/atom/language-gfm/blob/master/snippets/gfm.cson
+
+'.source.jcl-lang':
+  'SPACE':
+    'prefix': 'space'
+    'body': 'SPACE=(TRK,(45,15),RLSE)'
+
+  'DCB':
+    'prefix': 'dcb'
+    'body': 'DCB=(RECFM=,LRECL=,BLKSIZE=)'
+
+  'DISP':
+    'prefix': 'disp'
+    'body': 'DISP=(status,normal,abnormal)'

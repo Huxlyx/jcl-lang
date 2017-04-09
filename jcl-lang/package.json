@@ -1,0 +1,14 @@
+{
+  "name": "jcl-lang",
+  "version": "0.0.1",
+  "description": "Basic syntax highliting for JCL by MTE",
+  "keywords": [
+    "language",
+    "grammar"
+  ],
+  "repository": "https://github.com/Huxlyx/jcl-lang",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  }
+}

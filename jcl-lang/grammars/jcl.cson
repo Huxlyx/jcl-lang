@@ -1,0 +1,183 @@
+'scopeName': 'source.jcl-lang'
+name: 'JCL'
+'fileTypes': [
+    'job', 'jcl', 'proc'
+]
+patterns: [
+    {
+        name : 'job-card'
+        begin: '^//(\\w|-){1,8}\\s+(?=(JOB)|(PROC))'
+        end  : "(?<=\\w|'|\\))\\s*$"
+        patterns: [
+            { include: '#comment' }
+        ]
+    },
+    {
+        name : 'step'
+        begin: '^//(\\w|-){1,8}\\s+(?=EXEC)'
+        end  : "(?<=\\w|\\)|')\\s*$"
+        patterns: [
+            { include: '#comment' },
+
+        ]
+    },
+    {
+        name : 'dd-stmt'
+        begin: '^//(\\w|-){1,8}\\s+DD\\s+'
+        #ends with letter or =* (e.g. SYSOUT=*) or ')' (e.g. SPACE=(CYL,1))
+        end: '((?<=\\w|(=\\*)|\\))\\s*$)
+        |((?<=\\w|\\)|(=\\*))\\s+(.*?)$)'
+        patterns: [
+            { include: '#comment' },
+            {
+                name : 'dd-stmt.dd-name'
+                match: '^//(\\w|-){1,8}'
+            },
+            {
+                name : 'dd-stmt.dd-wrd'
+                match: '\\s+(DD)\\s+'
+            },
+            {
+                name : 'comment'
+                match: '(?<=\\w|\\)|(=\\*))\\s+(.*?)$'
+            },
+            {
+                name : 'dd-stmt.dsn'
+                begin: '(DSN|DSNAME)='
+                end  : '(?=,|\\s)'
+                patterns: [
+                    {
+                        name : 'dd-stmt.dsn.backref'
+                        match: '\\*(\\.(\\w){1,8})+(?=,|\\s)'
+                    },
+                    {
+                        name : 'dd-stmt.dsn.var'
+                        match: '&(\\w){1,8}(\\((\\w){1,8}\\))?(?=,|\\.|\\s)'
+                    },
+                    {
+                        name : 'dd-stmt.dsn.temp'
+                        match: '&&(\\w){1,8}(?=,|\\.|\\s)'
+                    }
+                ]
+            },
+            {
+                name : 'dd-stmt.disp'   #DISP=SHR
+                begin: '(DISP)=(?!\\()'
+                end  : '(?=,|\\s)'
+                patterns: [
+                    {
+                        name :'dd-stmt.disp.val'
+                        match:'(NEW|OLD|SHR|MOD|CATLG|UNCATLG|DELETE|PASS|KEEP)'
+                    }
+                ]
+            },
+            {
+                name : 'dd-stmt.disp'  #DISP=(NEW,CATLG,DELETE)
+                begin: '(DISP)=(\\()'
+                end  : '(\\))(?=,|\\s)'
+                patterns: [
+                    {
+                        name :'dd-stmt.disp.val'
+                        match:'(NEW|OLD|SHR|MOD|CATLG|UNCATLG|DELETE|PASS|KEEP)'
+                    }
+                ]
+            },
+            {
+                name : 'dd-stmt.unit'
+                begin: '(UNIT)='
+                end  : '(?=,|\\s)'
+                patterns: [
+                ]
+            },
+            {
+                name : 'dd-stmt.space'
+                begin: '(SPACE)=\\('
+                end  : '(,RLSE)?\\)(?=,|\\s)'
+                patterns: [
+                    {
+                        name : 'dd-stmt.space.spcunits'
+                        match: 'TRK|CYL|BLKSIZE'
+                    },
+                    {
+                        name : 'dd-stmt.space.size'
+                        match: ',\\((\\d*(,\\d*)*\\)?)'
+                    }
+                    {
+                        name : 'dd-stmt.space.rlse'
+                        match: ',RLSE\\)'
+                    }
+                ]
+            },
+            {
+                name : 'dd-stmt.dcb'
+                begin: '(DCB)=(\\()'
+                end  : '(\\))(?=,|\\s)'
+                patterns: [
+                    {
+                        name : 'dd-stmt.dcb.blksize'
+                        match: 'BLKSIZE=(\\d*)'
+                    },
+                    {
+                        name : 'dd-stmt.dcb.lrecl'
+                        match: 'LRECL=(\\d*)'
+                    },
+                    {
+                        name : 'dd-stmt.dcb.supported-recfm'
+                        match: 'RECFM=(F|FB|FBA|FBM|V|VB|VBA|VBM)(?=\\)|,|\\s)'
+                    },
+                    {
+                        name : 'dd-stmt.dcb.unsupported-recfm'
+                        match: 'RECFM=(\\w*)'
+                    }
+                ]
+            },
+            {
+                name : 'dd-stmt.sysout'
+                begin: '(SYSOUT)='
+                end  : '(?=\\s)'
+                patterns: [
+                    {
+                        name : 'dd-stmt.sysout.out-class'
+                        match: '\\*'
+                    },
+                    {
+                        name : 'dd-stmt.sysout.ref'
+                        match: '&(\\w){1,8}(\\((\\w){1,8}\\))?(?=,|\\.|\\s)'
+                    }
+                ]
+            },
+            {
+                name : 'dd-stmt.dummy'
+                match: '(DUMMY)'
+            },
+            {
+                name : 'dd-stmt.instream'  #DISP=(NEW,CATLG,DELETE)
+                begin: '(?<!=|/)\\*'
+                end  : '(?=^(/|//|/\\*))'
+                patterns: [
+                    {
+                        name :'dd-stmt.disp.val'
+                        match:'(NEW|OLD|SHR|MOD|CATLG|UNCATLG|DELETE|PASS|KEEP)'
+                    }
+                ]
+            }
+
+        ]
+    },
+    { include: '#comment' },
+    {
+        name : 'eoj'
+        match: '^//\\s*$'
+    }
+]
+repository :
+    comment:
+        patterns: [
+            {
+                name : 'comment'
+                match: '^(/){1,2}\\*.*$'
+            },
+            {
+                name : ''
+            }
+        ]

@@ -1,0 +1,88 @@
+@import "ui-variables";
+
+@job: turquoise;
+@step: yellow;
+@green: green;
+@positioning: orange;
+@operand: turquoise;
+@dd-stmt: white;
+@prop: pink;
+@prop2: #1480f3;
+@prop3: cyan;
+
+.editor {
+    .syntax--jcl-lang {
+        .syntax--job-card {
+            color:turquoise;
+        }
+        .syntax--step {
+            color:@step;
+        }
+        .syntax--dd-stmt {
+            color: #c678dd;
+            .syntax--dd-wrd {
+                color: orange;
+            }
+            .syntax--dd-name {
+                color: red;
+            }
+            .syntax--dsn {
+                color: @dd-stmt;
+                .syntax--var {
+                    color: orange;
+                }
+                .syntax--temp {
+                    color: pink;
+                }
+                .syntax--backref {
+                    color: orange;
+                }
+            }
+            .syntax--disp {
+                color: @prop2;
+                .syntax--val {
+                    color: @prop3;
+                }
+            }
+            .syntax--unit {
+                color: @dd-stmt;
+            }
+            .syntax--space {
+                color: @dd-stmt;
+            }
+            .syntax--dcb {
+                color: @prop2;
+                .syntax--blksize {
+                    color: @prop3;
+                }
+                .syntax--lrecl {
+                    color: @prop3;
+                }
+                .syntax--supported-recfm {
+                    color: @prop3;
+                }
+                .syntax--unsupported-recfm {
+                    color: red;
+                }
+            }
+            .syntax--sysout {
+                color: @prop;
+                .syntax--ref {
+                    color: orange;
+                }
+                .syntax--out-class {
+                    color: @prop;
+                }
+            }
+            .syntax--dummy {
+                color: @prop;
+            }
+            .syntax--instream {
+                color: yellowgreen;
+            }
+        }
+        .syntax--eoj {
+            color:red;
+        }
+    }
+}
