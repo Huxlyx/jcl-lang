@@ -6,7 +6,7 @@ name: 'JCL'
 patterns: [
     {
         name : 'job-card'
-        begin: '^//(\\w|-){1,8}\\s+(?=(JOB)|(PROC))'
+        begin: '^//(\\w|-|\\$){1,8}\\s+(?=(JOB)|(PROC))'
         end  : "(?<=\\w|'|\\))\\s*$"
         patterns: [
             { include: '#comment' }
@@ -26,7 +26,7 @@ patterns: [
         begin: '^//(\\w|-){1,8}\\s+DD\\s+'
         #ends with letter or =* (e.g. SYSOUT=*) or ')' (e.g. SPACE=(CYL,1))
         end: '((?<=\\w|(=\\*)|\\))\\s*$)
-        |((?<=\\w|\\)|(=\\*))\\s+(.*?)$)'
+        |((?<=\\w|\\)|(=\\*))\\s+(.*?)$)|(?=//\\*)'
         patterns: [
             { include: '#comment' },
             {
@@ -36,10 +36,6 @@ patterns: [
             {
                 name : 'dd-stmt.dd-wrd'
                 match: '\\s+(DD)\\s+'
-            },
-            {
-                name : 'comment'
-                match: '(?<=\\w|\\)|(=\\*))\\s+(.*?)$'
             },
             {
                 name : 'dd-stmt.dsn'
@@ -126,6 +122,10 @@ patterns: [
                         match: 'RECFM=(F|FB|FBA|FBM|V|VB|VBA|VBM)(?=\\)|,|\\s)'
                     },
                     {
+                        name : 'dd-stmt.dcb.proprietary-recfm'
+                        match: 'RECFM=(UTF8)(?=\\)|,|\\s)'
+                    },
+                    {
                         name : 'dd-stmt.dcb.unsupported-recfm'
                         match: 'RECFM=(\\w*)'
                     }
@@ -153,15 +153,18 @@ patterns: [
             {
                 name : 'dd-stmt.instream'  #DISP=(NEW,CATLG,DELETE)
                 begin: '(?<!=|/)\\*'
-                end  : '(?=^(/|//|/\\*))'
+                end  : '(?=(^(/|//|)\\*))'
                 patterns: [
                     {
                         name :'dd-stmt.disp.val'
                         match:'(NEW|OLD|SHR|MOD|CATLG|UNCATLG|DELETE|PASS|KEEP)'
                     }
                 ]
-            }
-
+            },
+            # {
+            #     name : 'comment'
+            #     match: '(?<=(\\w|\\)))\\s+'
+            # },
         ]
     },
     { include: '#comment' },

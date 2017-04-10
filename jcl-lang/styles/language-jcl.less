@@ -5,7 +5,8 @@
 @green: green;
 @positioning: orange;
 @operand: turquoise;
-@dd-stmt: white;
+@dd-stmt: #abb2bf;
+@dsn: #32abbf;
 @prop: pink;
 @prop2: #1480f3;
 @prop3: cyan;
@@ -19,7 +20,7 @@
             color:@step;
         }
         .syntax--dd-stmt {
-            color: #c678dd;
+            color: #787bf1;
             .syntax--dd-wrd {
                 color: orange;
             }
@@ -27,7 +28,7 @@
                 color: red;
             }
             .syntax--dsn {
-                color: @dd-stmt;
+                color: @dsn;
                 .syntax--var {
                     color: orange;
                 }
@@ -60,6 +61,9 @@
                 }
                 .syntax--supported-recfm {
                     color: @prop3;
+                }
+                .syntax--proprietary-recfm {
+                    color: yellowgreen;
                 }
                 .syntax--unsupported-recfm {
                     color: red;
