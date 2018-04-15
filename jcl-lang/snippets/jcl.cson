@@ -1,5 +1,3 @@
-# If you want some example snippets, check out:
-# https://github.com/atom/language-gfm/blob/master/snippets/gfm.cson
 
 '.source.jcl-lang':
   'SPACE':
@@ -8,8 +6,66 @@
 
   'DCB':
     'prefix': 'dcb'
-    'body': 'DCB=(RECFM=,LRECL=,BLKSIZE=)'
+    'body': 'DCB=(RECFM=${1},LRECL=${2},BLKSIZE=${3})${0}'
 
   'DISP':
     'prefix': 'disp'
-    'body': 'DISP=(status,normal,abnormal)'
+    'body': 'DISP=(${1:NEW},${2:CATLG},${3:DELETE})${0}'
+
+  'IDCAMS':
+    'prefix': 'idcams'
+    'body': """
+      //STEP${1:00} EXEC PGM=IDCAMS
+      //SYSPRINT DD SYSOUT=*
+      //SYSIN DD *
+      ${0}
+      /*
+    """
+
+  'IDCAMS_KSDS':
+    'prefix': 'ksds'
+    'body': """
+        DEFINE CLUSTER (NAME(${1:DSNAME})     -
+        VOLUMES(VPMVSH)                             -
+        INDEXED                                     -
+        RECSZ(80 80)                                -
+        KEYS(6,0)                                   -
+        TRACKS(1,1)                                 -
+        CISZ(4096)                                  -
+        FREESPACE(3 3) )                            -
+        DATA (NAME(${1:DSNAME}.DATA))         -
+        INDEX (NAME(${1:DSNAME}.INDEX))
+    """
+
+  'IDCAMS_ESDS':
+    'prefix': 'esds'
+    'body': """
+        DEFINE CLUSTER (NAME(${1:DSNAME})     -
+        VOLUMES(VPMVSH)                             -
+        NONINDEXED                                  -
+        RECSZ(80 80)                                -
+        TRACKS(1,1)                                 -
+        CISZ(4096)                                  -
+        FREESPACE(3 3) )                            -
+        DATA (NAME(${1:DSNAME}.DATA))
+    """
+
+  'IDCAMS_RRDS':
+    'prefix': 'rrds'
+    'body': """
+        DEFINE CLUSTER (NAME(${1:DSNAME})     -
+        VOLUMES(VPMVSH)                             -
+        NUMBERED                                    -
+        RECSZ(80 80)                                -
+        TRACKS(1,1)                                 -
+        CISZ(4096)                                  -
+        FREESPACE(3 3) )                            -
+        DATA (NAME(${1:DSNAME}.DATA))
+    """
+
+  'IDCAMS_DELETE_CLUSTER':
+    'prefix': 'delete'
+    'body': """
+        DELETE ${1:DSNAME}  -
+        CLUSTER PURGE
+    """

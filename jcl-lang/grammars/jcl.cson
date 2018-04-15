@@ -18,21 +18,21 @@ patterns: [
         end  : "(?<=\\w|\\)|')\\s*$"
         patterns: [
             { include: '#comment' },
-
         ]
     },
     {
         name : 'dd-stmt'
         begin: '^//(\\w|-){1,8}\\s+DD\\s+'
-        #ends with letter or =* (e.g. SYSOUT=*) or ')' (e.g. SPACE=(CYL,1))
+        #ends with letter or =* (e.g. SYSOUT=*) OR ')' (e.g. SPACE=(CYL,1)) OR a comment
         end: '((?<=\\w|(=\\*)|\\))\\s*$)
-        |((?<=\\w|\\)|(=\\*))\\s+(.*?)$)|(?=//\\*)'
+        |((?<=\\w|\\)|(=\\*))\\s+(.*?)$)|(?=//\\*)
+        |(?=(^(/+)(\\*)))'
         patterns: [
             { include: '#comment' },
-            {
-                name : 'dd-stmt.dd-name'
-                match: '^//(\\w|-){1,8}'
-            },
+            # {
+            #     name : 'dd-stmt.dd-name'
+            #     match: '^//(\\w|-){1,8}'
+            # },
             {
                 name : 'dd-stmt.dd-wrd'
                 match: '\\s+(DD)\\s+'
@@ -151,14 +151,10 @@ patterns: [
                 match: '(DUMMY)'
             },
             {
-                name : 'dd-stmt.instream'  #DISP=(NEW,CATLG,DELETE)
+                name : 'dd-stmt.instream'
                 begin: '(?<!=|/)\\*'
-                end  : '(?=(^(/|//|)\\*))'
+                end  : '(?=(^(/+)(\\*)?))'
                 patterns: [
-                    {
-                        name :'dd-stmt.disp.val'
-                        match:'(NEW|OLD|SHR|MOD|CATLG|UNCATLG|DELETE|PASS|KEEP)'
-                    }
                 ]
             },
             # {
